@@ -36,10 +36,12 @@ import os
 import re
 import sys
 import tokenize
+
 from cStringIO import StringIO
 from urllib import quote as url_quote
 from tempita._looper import looper
 from tempita.compat3 import bytes, basestring_, next, is_unicode, coerce_text
+
 
 __all__ = ['TemplateError', 'Template', 'sub', 'HTMLTemplate',
            'sub_html', 'html', 'bunch']
@@ -165,7 +167,8 @@ class Template(object):
                     "You can only give one positional argument")
             if not hasattr(args[0], 'items'):
                 raise TypeError(
-                    "If you pass in a single argument, you must pass in a dictionary-like object (with a .items() method); you gave %r"
+                    ("If you pass in a single argument, you must pass in a ",
+                     "dict-like object (with a .items() method); you gave %r")
                     % (args[0],))
             kw = args[0]
         ns = kw
@@ -306,7 +309,7 @@ class Template(object):
             else:
                 arg0 = coerce_text(e)
             e.args = (self._add_line_info(arg0, pos),)
-            raise exc_info[0], e, exc_info[2]
+            raise (exc_info[1], e, exc_info[2])
 
     def _exec(self, code, ns, pos):
         __traceback_hide__ = True
@@ -319,7 +322,7 @@ class Template(object):
                 e.args = (self._add_line_info(e.args[0], pos),)
             else:
                 e.args = (self._add_line_info(None, pos),)
-            raise exc_info[0], e, exc_info[2]
+            raise(exc_info[1], e, exc_info[2])
 
     def _repr(self, value, pos):
         __traceback_hide__ = True
@@ -341,7 +344,7 @@ class Template(object):
             exc_info = sys.exc_info()
             e = exc_info[1]
             e.args = (self._add_line_info(e.args[0], pos),)
-            raise exc_info[0], e, exc_info[2]
+            raise(exc_info[1], e, exc_info[2])
         else:
             if self._unicode and isinstance(value, bytes):
                 if not self.default_encoding:
