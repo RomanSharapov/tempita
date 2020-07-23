@@ -37,8 +37,13 @@ import re
 import sys
 import tokenize
 
-from cStringIO import StringIO
-from urllib import quote as url_quote
+if sys.version_info[0] == 2:
+    from cStringIO import StringIO
+    from urllib import quote as url_quote
+else:
+    from io import StringIO
+    from urllib.parse import quote as url_quote
+
 from tempita._looper import looper
 from tempita.compat3 import bytes, basestring_, next, is_unicode, coerce_text
 
